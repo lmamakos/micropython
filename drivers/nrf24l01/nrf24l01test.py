@@ -7,14 +7,16 @@ from nrf24l01 import NRF24L01
 
 pipes = (b'\xf0\xf0\xf0\xf0\xe1', b'\xf0\xf0\xf0\xf0\xd2')
 
-def master():
-    nrf = NRF24L01(SPI(2), Pin('Y5'), Pin('Y4'), payload_size=8)
+cs_pin = 'PB7'
+ce_pin = 'PB6'
+spi_inst = 3
+def master(num_needed=16, delay_time=250):
+    nrf = NRF24L01(SPI(spi_inst), Pin(cs_pin), Pin(ce_pin), payload_size=8)
 
     nrf.open_tx_pipe(pipes[0])
     nrf.open_rx_pipe(1, pipes[1])
     nrf.start_listening()
 
-    num_needed = 16
     num_successes = 0
     num_failures = 0
     led_state = 0
@@ -55,12 +57,12 @@ def master():
             num_successes += 1
 
         # delay then loop
-        pyb.delay(250)
+        pyb.delay(delay_time)
 
     print('master finished sending; successes=%d, failures=%d' % (num_successes, num_failures))
 
 def slave():
-    nrf = NRF24L01(SPI(2), Pin('Y5'), Pin('Y4'), payload_size=8)
+    nrf = NRF24L01(SPI(spi_inst), Pin(cs_pin), Pin(ce_pin), payload_size=8)
 
     nrf.open_tx_pipe(pipes[1])
     nrf.open_rx_pipe(1, pipes[0])
@@ -75,7 +77,7 @@ def slave():
                 buf = nrf.recv()
                 millis, led_state = struct.unpack('ii', buf)
                 print('received:', millis, led_state)
-                for i in range(4):
+                for i in range(2):
                     if led_state & (1 << i):
                         pyb.LED(i + 1).on()
                     else:
@@ -92,9 +94,9 @@ def slave():
 
 print('NRF24L01 test module loaded')
 print('NRF24L01 pinout for test:')
-print('    CE on Y4')
-print('    CSN on Y5')
-print('    SCK on Y6')
-print('    MISO on Y7')
-print('    MOSI on Y8')
+print('    CE on ' + ce_pin)
+print('    CSN on ' + cs_pin)
+print('    SCK on SPI{:d}'.format(spi_inst))
+print('    MISO on SPI{:d}'.format(spi_inst))
+print('    MOSI on SPI{:d}'.format(spi_inst))
 print('run nrf24l01test.slave() on slave, then nrf24l01test.master() on master')
