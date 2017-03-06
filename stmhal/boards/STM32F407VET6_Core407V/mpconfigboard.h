@@ -117,13 +117,7 @@
 // 6      - GND  - VSS
 // 7      - PC8  - DAT0/D0
 // 8      - PC9  - DAT1/RES
-// 9  SW2 - GND
-// 10 SW1 - PA8
-
-
-// USB config
-// #define MICROPY_HW_USB_VBUS_DETECT_PIN (pin_A9)
-// #define MICROPY_HW_USB_OTG_ID_PIN      (pin_A10)
+// 9      - N/C
 
 //#define MICROPY_HW_UART_REPL    PYB_UART_1
 //#define MICROPY_HW_UART_REPL_BAUD  (115200)
