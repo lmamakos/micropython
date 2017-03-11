@@ -22,6 +22,8 @@
 #define MICROPY_HW_CLK_PLLP (RCC_PLLP_DIV2)
 #define MICROPY_HW_CLK_PLLQ (7)
 
+#define MICROPY_HW_RTC_USE_LSE      (1)
+#define MICROPY_HW_RTC_USE_US       (0)
 
 // UART config
 #define MICROPY_HW_UART1_TX     (pin_A9)   // PA9,PB6
